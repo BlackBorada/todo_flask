@@ -1,0 +1,12 @@
+.gitignore
+
+/.venv
+/migrations
+/instance
+/data
+/.vscode
+/app/__pycache__
+
+# files
+.gitlab-ci.yml
+README.md

@@ -1,0 +1,19 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}User Profile{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h2>User Profile</h2>
+        <ul class="list-group">
+            <li class="list-group-item">
+                <strong>Username:</strong> {{ user.username }}
+            </li>
+            <li class="list-group-item">
+                <strong>Email:</strong> {{ user.email }}
+            </li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

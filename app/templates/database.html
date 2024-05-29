@@ -1,0 +1,11 @@
+{% extends 'bootstrap/base.html' %}
+{% block content %}
+  <h1>Database</h1>
+  <p>Select the database you want to use:</p>
+    <form action="{{ url_for('set_database', database='postgresql') }}" method="post">
+        <button type="submit">PostgreSQL</button>
+    </form>
+  <form action="{{ url_for('set_database', database='sqlite') }}" method="post">
+    <button type="submit">SQLite</button>
+</form>
+{% endblock %}

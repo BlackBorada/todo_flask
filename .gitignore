@@ -1,0 +1,13 @@
+
+*.pyc
+
+/.venv
+/migrations
+/instance
+/data
+
+
+/.vscode
+app/__pycache__
+app/blueprints/__pycache__
+app/blueprints/__pycache__

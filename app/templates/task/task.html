@@ -1,0 +1,65 @@
+{% extends "bootstrap/base.html" %}
+
+{% block content %}
+
+<h2>Tasks</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Due Date</th>
+            <th>Completed</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for task in tasks %}
+        <tr>
+            <td>{{ task.title }}</td>
+            <td>{{ task.description }}</td>
+            <td>{{ task.due_date.strftime('%Y-%m-%d') }}</td>
+            <td>{% if task.completed %}Yes{% else %}No{% endif %}</td>
+            <td>
+                {% if current_user.is_authenticated and task.user_id == current_user.id %}
+                    <a href="{{ url_for('task.edit', id=task.id) }}" class="btn btn-outline-warning btn-sm">Edit</a>
+                    <form action="{{ url_for('task.delete', id=task.id) }}" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+                    </form>
+                {% else %}
+                    <button class="btn btn-secondary btn-sm" disabled>Edit</button>
+                    <button class="btn btn-secondary btn-sm" disabled>Delete</button>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<hr>
+
+<h2>Add New Task</h2>
+<form method="POST" action="{{ url_for('task.add') }}">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+        {{ form.title.label(class='form-label') }}
+        {{ form.title(class='form-control') }}
+    </div>
+    <div class="form-group">
+        {{ form.description.label(class='form-label') }}
+        {{ form.description(class='form-control') }}
+    </div>
+    <div class="form-group">
+        {{ form.due_date.label(class='form-label') }}
+        {{ form.due_date(class='form-control', type='date') }}
+    </div>
+    <div class="form-check">
+        {{ form.completed(class='form-check-input') }}
+        {{ form.completed.label(class='form-check-label') }}
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary">Add Task</button>
+</form>
+
+<script src="{{ url_for('static', filename='js/date.js') }}"></script>
+{% endblock %}

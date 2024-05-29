@@ -1,0 +1,29 @@
+{% extends 'bootstrap/base.html' %}
+
+{% block content %}
+<h1>Edit  sdad Task</h1>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+        {{ form.title.label(class='form-label') }}
+        {{ form.title(class='form-control') }}
+    </div>
+    <div class="form-group">
+        {{ form.description.label(class='form-label') }}
+        {{ form.description(class='form-control') }}
+    </div>
+    <div class="form-group">
+        {{ form.due_date.label(class='form-label') }}
+        {{ form.due_date(class='form-control', type="date") }}
+    </div>
+    <div class="form-check">
+        {{ form.completed(class='form-check-input') }}
+        {{ form.completed.label(class='form-check-label') }}
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <a href="{{ url_for('index.index') }}" class="btn btn-secondary">Back</a>
+</form>
+
+<script src="{{ url_for('static', filename='js/date.js') }}"></script>
+{% endblock %}

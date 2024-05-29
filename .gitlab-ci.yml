@@ -1,0 +1,32 @@
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_IMAGE_NAME: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+
+stages:
+  - build
+
+build-job:
+  tags:
+    - DinD
+  stage: build
+  image: docker:latest
+  services:
+    - name: docker:dind
+      alias: docker
+
+  script:
+    - docker build -t $DOCKER_IMAGE_NAME .
+    - docker save $DOCKER_IMAGE_NAME | gzip > my-docker-image.tar.gz;
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker push $DOCKER_IMAGE_NAME
+    - |
+      if [[ "$CI_COMMIT_BRANCH" == "$CI_DEFAULT_BRANCH" ]]; then
+        docker tag "$DOCKER_IMAGE_NAME" "$CI_REGISTRY_IMAGE:latest"
+        docker push "$CI_REGISTRY_IMAGE:latest"
+      fi
+    - docker rmi $DOCKER_IMAGE_NAME
+  artifacts:
+    paths:
+      - my-docker-image.tar.gz
+    expire_in: 1 week

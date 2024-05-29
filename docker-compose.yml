@@ -1,0 +1,35 @@
+# write a template docker compose, the web is assembled from Docker file and default Postgress database
+
+services:
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_USER=task
+      - POSTGRES_PASSWORD=1
+      - POSTGRES_DB=task
+
+    healthcheck:
+      test: /usr/bin/pg_isready
+      interval: 5s
+      timeout: 10s
+
+    ports:
+      - 5432:5432
+    volumes:
+      - db_data:/var/lib/postgresql/data
+  web:
+    image: 192.168.0.8:5050/baraba/todo_flask:project-restructures
+    environment:
+      - DB_USER=task
+      - DB_PASSWORD=1
+      - DB_HOST=db
+    
+    ports:
+      - "5000:5000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+
+volumes:
+  db_data:

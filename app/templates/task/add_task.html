@@ -1,0 +1,27 @@
+{% extends "bootstrap/base.html" %}
+{% block content %}
+<form method="POST" action="{{ url_for('task.add') }}">
+  {{ form.csrf_token }}
+  <div>
+    {{ form.title.label }} {{ form.title(size=20) }}
+    {% for error in form.title.errors %}
+    <span class="error">{{ error }}</span>
+    {% endfor %}
+  </div>
+  <div>
+    {{ form.description.label }} {{ form.description(cols=40, rows=5) }}
+  </div>
+  <div>
+    {{ form.due_date.label }} {{ form.due_date }}
+    {% for error in form.due_date.errors %}
+    <span class="error">{{ error }}</span>
+    {% endfor %}
+  </div>
+  <div>
+    {{ form.completed.label }} {{ form.completed }}
+  </div>
+  <button type="submit">Submit</button>
+</form>
+<script src="{{ url_for('static', filename='js/date.js') }}"></script>
+
+{% endblock %}
