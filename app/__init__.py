@@ -1,9 +1,10 @@
+import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap
 from flask_migrate import Migrate
 from flask_login import LoginManager
-from .config import POSTGRESQL_DATABASE_URI
+from config import config
 
 
 
@@ -20,12 +21,14 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-def create_app():
+def create_app(config_type=None):
+    if config_type is None:
+        config_type = "development"
     app = Flask(__name__)
-    app.config["SQLALCHEMY_DATABASE_URI"] = POSTGRESQL_DATABASE_URI
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-    app.secret_key = "secret_key_for_flask_app"
-    # Initialize Flask extensions with the app instance
+
+
+    app.config.from_object(config[config_type])
+
     db.init_app(app)
     bootstrap.init_app(app)
     migrate.init_app(app, db)
