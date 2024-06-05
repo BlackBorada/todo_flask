@@ -1,10 +1,10 @@
 
 *.pyc
 
-/.venv
-/migrations
-/instance
-/data
+.venv
+migrations
+instance
+data
 
 
 /.vscode
