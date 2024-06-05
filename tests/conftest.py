@@ -1,3 +1,4 @@
+from datetime import datetime
 import pytest
 from app import create_app, db
 from app.models import User, Task
@@ -27,18 +28,18 @@ def init_database():
 
     db.create_all()
 
-    first_user = User("first_user", email="first_user@example.com", password="password1")
-    second_user = User("second_user", email="second_user@example.com", password="password2")
+    first_user = User(username="first_user", email="first_user@example.com", password="password1")
+    second_user = User(username="second_user", email="second_user@example.com", password="password2")
 
     db.session.add(first_user)
     db.session.add(second_user)
 
     db.session.commit()
 
-    task1 = Task(title="task1", description="description1", completed=False, user_id=first_user.id)
-    task2  = Task(title="task2", description="description2", completed=False, user_id=second_user.id)
-    task3   = Task(title="task3", description="description3", completed=True, user_id=first_user.id)
-    task4    = Task(title="task4", description="description4", completed=True, user_id=second_user.id)
+    task1 = Task(title="task1", description="description1", due_date=datetime.now(), completed=False, user_id=first_user.id)
+    task2 = Task(title="task2", description="description2", due_date=datetime.now(), completed=False, user_id=second_user.id)
+    task3 = Task(title="task3", description="description3", due_date=datetime.now(), completed=True, user_id=first_user.id)
+    task4 = Task(title="task4", description="description4", due_date=datetime.now(), completed=True, user_id=second_user.id)
 
     db.session.add(task1)
     db.session.add(task2)
@@ -46,6 +47,8 @@ def init_database():
     db.session.add(task4)
 
     db.session.commit()
+
+    yield
 
     db.drop_all()
 
