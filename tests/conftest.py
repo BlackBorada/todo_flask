@@ -53,4 +53,19 @@ def init_database():
     db.drop_all()
 
 
-    
+@pytest.fixture(scope='function')
+def log_in_default_user(test_client):
+    test_client.post('auth/login', data={'username': 'first_user', 'password': 'password1'}, follow_redirects=True)
+
+    yield
+
+    test_client.get('ayth/logout')
+
+@pytest.fixture(scope='function')
+def log_in_second_user(test_client):
+    test_client.post('auth/login', data={'usename': 'second_user', 'password': 'password2'}, follow_redirects=True)
+
+    yield
+
+    test_client.get('ayth/logout')
+
