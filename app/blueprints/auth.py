@@ -13,6 +13,8 @@ auth_bp = Blueprint("auth", __name__)
 def profile():
     return render_template("auth/profile.html", title="Profile", user=current_user)
 
+#TODO: change the registry on registration
+#TODO: Add check a duplicate in username and emails in database on registration
 @auth_bp.route("/register", methods=["GET", "POST"])
 def register():
     form = RegistrationForm()
