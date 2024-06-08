@@ -1,13 +1,14 @@
 
 *.pyc
 
-/.venv
-/migrations
-/instance
-/data
+.venv
+migrations
+instance
+data
 
 
 /.vscode
+__pycache__
 app/__pycache__
 app/blueprints/__pycache__
 app/blueprints/__pycache__

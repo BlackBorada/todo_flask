@@ -6,3 +6,10 @@ ignore = ["F401", "F402"]
 [tool.ruff.lint.per-file-ignores]
 "./app/__init__.py" = ["E401", "E402"]
 "app/blueprints/__init__.py" = ["E401", "E402"]
+
+
+[tool.pytest.ini_options]
+testpaths = [
+    "tests",
+    "integration",
+]

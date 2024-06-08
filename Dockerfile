@@ -24,7 +24,6 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 
 COPY . .
 RUN ls
-RUN chmod +x entrypoint_dev.sh
 EXPOSE 5000
 ENTRYPOINT [ "flask" ] 
 CMD [ "--app", "app" , "run", "--host=0.0.0.0", "--debug" ]

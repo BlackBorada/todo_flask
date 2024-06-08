@@ -14,6 +14,13 @@ class Task(db.Model):
     user_id  = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 
+    def __init__(self, title, description, due_date, completed, user_id):
+        self.title = title
+        self.description = description
+        self.due_date  = due_date
+        self.completed  = completed
+        self.user_id   = user_id
+
     def __repr__(self):
         return f"Task('{self.title}', \
         '{self.description}', \
@@ -28,6 +35,11 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(256))
     tasks = db.relationship('Task', backref='owner', lazy=True)
 
+    def __init__(self, username, email, password):
+        self.username = username
+        self.email = email
+        self.set_password(password)
+
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -36,4 +48,4 @@ class User(db.Model, UserMixin):
         return check_password_hash(self.password_hash, password)
 
     def __repr__(self):
-        return "<User %r>" % self.username
+        return f"<User: {self.username}>"
