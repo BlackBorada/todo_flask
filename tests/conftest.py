@@ -1,7 +1,7 @@
 from datetime import datetime
 import pytest
 from app import create_app, db
-from app.models import User, Task
+from app.models import Users, Task
 
 # --------
 # Fixtures
@@ -10,7 +10,7 @@ from app.models import User, Task
 
 @pytest.fixture(scope="module")
 def new_user():
-    user = User("test_user", email="test_user@example.com", password="password")
+    user = Users("test_user", email="test_user@example.com", password="password")
     return user
 
 
@@ -27,10 +27,10 @@ def test_client():
 def init_database():
     db.create_all()
 
-    first_user = User(
+    first_user = Users(
         username="first_user", email="first_user@example.com", password="password1"
     )
-    second_user = User(
+    second_user = Users(
         username="second_user", email="second_user@example.com", password="password2"
     )
 
@@ -77,6 +77,7 @@ def init_database():
 
     yield
 
+    db.session.remove()
     db.drop_all()
 
 
@@ -90,7 +91,7 @@ def log_in_default_user(test_client):
 
     yield
 
-    test_client.get("ayth/logout")
+    test_client.get("auth/logout")
 
 
 @pytest.fixture(scope="function")
@@ -103,4 +104,4 @@ def log_in_second_user(test_client):
 
     yield
 
-    test_client.get("ayth/logout")
+    test_client.get("auth/logout")
