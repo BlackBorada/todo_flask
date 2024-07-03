@@ -6,8 +6,12 @@ from wtforms import (
     DateTimeField,
     PasswordField,
     SubmitField,
+    SelectField,
 )
 from wtforms.validators import DataRequired, Length, Email, EqualTo
+
+
+from .models import TaskStatus, UserRole
 
 
 class TaskForm(FlaskForm):
@@ -15,6 +19,9 @@ class TaskForm(FlaskForm):
     description = TextAreaField("Description:")
     due_date = DateTimeField(
         "Due Date:", format="%Y-%m-%d", validators=[DataRequired()]
+    )
+    status = SelectField(
+        "Status:", choices=[(status.name, status.value) for status in TaskStatus]
     )
     completed = BooleanField("Completed:")
 
