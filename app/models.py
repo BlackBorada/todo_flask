@@ -11,9 +11,10 @@ import enum
 
 # NOTE: add comments
 # NOTE: add tags with tasks
-# NOTE   : add role to user
+# NOTE: add role to user
 
 
+# TODO: Change users and task. From one to many -> many to many.
 class UserRole(enum.Enum):
     user = "user"
     admin = "admin"
@@ -72,9 +73,9 @@ class Users(db.Model, UserMixin):
     password_hash = db.Column(db.String(256))
     user_role = db.Column(db.Enum(UserRole), default=UserRole.user)
 
-    tasks = db.relationship("Task", backref="user", lazy=True)
-    comments = db.relationship("Comments", backref="user", lazy=True)
-    task_history = db.relationship("TaskHistory", backref="user", lazy=True)
+    tasks = db.relationship("Task", backref="users", lazy=True)
+    comments = db.relationship("Comments", backref="users", lazy=True)
+    task_history = db.relationship("TaskHistory", backref="users", lazy=True)
 
     def __init__(self, username, email, password):
         self.username = username
