@@ -4,22 +4,22 @@ from flask_login import current_user, login_required
 from flask.views import MethodView
 
 from app import db
-from app.models import Task
+from app.models import Task, Users
 from app.forms import TaskForm
 
-# TODO rewrite to Class-based Views
 
 task_bp = Blueprint("task", __name__)
 
 
 class TaskList(MethodView):
     def get(self):
+        form = TaskForm()
         tasks = (
             Task.query.filter_by(user_id=current_user.id).all()
             if current_user.is_authenticated
             else Task.query.all()
         )
-        return render_template("task/task.html", tasks=tasks)
+        return render_template("task/task.html", form=form, tasks=tasks)
 
 
 class TaskAddView(MethodView):
@@ -35,7 +35,8 @@ class TaskAddView(MethodView):
                 description=form.description.data,
                 due_date=form.due_date.data,
                 completed=form.completed.data,
-                user_id=current_user.id,
+                user_id=current_user.id if current_user.is_authenticated else None,
+                status=form.status.data,
             )
             db.session.add(task)
             db.session.commit()
@@ -43,6 +44,7 @@ class TaskAddView(MethodView):
         return render_template("task/add_task.html", form=form)
 
 
+# TODO: Update method post
 class TaskEditView(MethodView):
     def get(self, id):
         task = Task.query.get_or_404(id)
@@ -87,7 +89,43 @@ class TaskDeleteView(MethodView):
         return redirect(url_for("task.task"))
 
 
+class TaskUserListView(MethodView):
+    def get(self, username):
+        form = TaskForm()
+        tasks = (
+            Users.query.filter_by(username=username).first().tasks
+            if current_user.is_authenticated
+            else Task.query.all()
+        )
+        return render_template("task/task.html", form=form, tasks=tasks)
+
+
+class TaskUserListCompletedView(MethodView):
+    def get(self, username):
+        form = TaskForm()
+        tasks = (
+            Task.query.filter_by(
+                user_id=Users.query.filter_by(username=username).first().id,
+                completed=True,
+            )
+            if current_user.is_authenticated
+            else Task.query.all()
+        )
+        return render_template("task/task.html", form=form, tasks=tasks)
+
+
+# NOTE: Task
 task_bp.add_url_rule("/", view_func=TaskList.as_view("task"))
 task_bp.add_url_rule("/add", view_func=TaskAddView.as_view("add"))
 task_bp.add_url_rule("/edit/<int:id>", view_func=TaskEditView.as_view("edit"))
 task_bp.add_url_rule("/delete/<int:id>", view_func=TaskDeleteView.as_view("delete"))
+
+# NOTE: User tasks
+task_bp.add_url_rule(
+    "/user/<string:username>", view_func=TaskUserListView.as_view("user")
+)
+
+task_bp.add_url_rule(
+    "/user/<string:username>/completed",
+    view_func=TaskUserListCompletedView.as_view("user_completed"),
+)
