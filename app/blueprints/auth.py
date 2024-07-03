@@ -4,7 +4,7 @@ from flask.views import MethodView
 
 from app import db
 from app.forms import RegistrationForm, LoginForm
-from app.models import User
+from app.models import Users
 
 
 # TODO rewrite to Class-based Views
@@ -22,19 +22,19 @@ class RegistrationView(MethodView):
     def post(self):
         form = RegistrationForm()
         if form.validate_on_submit():
-            existing_username = User.query.filter_by(
+            existing_username = Users.query.filter_by(
                 username=form.username.data
             ).first()
             if existing_username is not None:
                 flash("Username already exists")
                 return redirect(url_for("auth.registration"))
 
-            existing_email = User.query.filter_by(email=form.email.data).first()
+            existing_email = Users.query.filter_by(email=form.email.data).first()
             if existing_email is not None:
                 flash("Email already exists")
                 return redirect(url_for("auth.registration"))
 
-            user = User(
+            user = Users(
                 username=form.username.data,
                 email=form.email.data,
                 password=form.password.data,
@@ -56,7 +56,7 @@ class LoginView(MethodView):
     def post(self):
         form = LoginForm()
         if form.validate_on_submit():
-            user = User.query.filter_by(username=form.username.data).first()
+            user = Users.query.filter_by(username=form.username.data).first()
             if user is None or not user.check_password(form.password.data):
                 flash("Invalid username or password")
                 return redirect(url_for("auth.login"))
